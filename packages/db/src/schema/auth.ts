@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index, pgEnum } from "drizzle-orm/pg-core";
+import { friendship, notification, group, groupMember, message } from "./chat";
 
 export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
 
@@ -84,6 +85,12 @@ export const verification = pgTable(
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  sentFriendRequests: many(friendship, { relationName: "friendshipRequester" }),
+  receivedFriendRequests: many(friendship, { relationName: "friendshipAddressee" }),
+  notifications: many(notification),
+  hostedGroups: many(group),
+  groupMemberships: many(groupMember),
+  messages: many(message),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
