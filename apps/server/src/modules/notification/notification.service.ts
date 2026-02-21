@@ -1,4 +1,5 @@
 import type { NotificationRepository } from "./notification.repository";
+import { connectionManager } from "../../ws/connection-manager";
 
 export class NotificationService {
   constructor(private notificationRepo: NotificationRepository) {}
@@ -8,7 +9,13 @@ export class NotificationService {
     type: "friend_request" | "friend_accepted" | "group_invite";
     data: Record<string, unknown>;
   }) {
-    return this.notificationRepo.create(data);
+    const [created] = await this.notificationRepo.create(data);
+    // Push real-time notification via WebSocket
+    connectionManager.sendTo(data.userId, {
+      type: "notification:new",
+      data: created,
+    });
+    return [created];
   }
 
   async list(userId: string) {
