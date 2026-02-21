@@ -3,16 +3,26 @@ import * as schema from "@chat-application/db/schema/auth";
 import { env } from "@chat-application/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { stripe } from "@better-auth/stripe";
+import Stripe from "stripe";
+
+const stripeClient = new Stripe(env.STRIPE_SECRET_KEY);
 
 export const auth = betterAuth({
+  baseURL: env.BETTER_AUTH_URL,
   database: drizzleAdapter(db, {
     provider: "pg",
-
     schema: schema,
   }),
   trustedOrigins: [env.CORS_ORIGIN],
   emailAndPassword: {
     enabled: true,
+  },
+  socialProviders: {
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    },
   },
   advanced: {
     defaultCookieAttributes: {
@@ -21,5 +31,22 @@ export const auth = betterAuth({
       httpOnly: true,
     },
   },
-  plugins: [],
+  plugins: [
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
+      createCustomerOnSignUp: true,
+      subscription: {
+        enabled: true,
+        plans: [
+          {
+            name: "premium",
+            priceId: "price_premium_monthly",
+          },
+        ],
+      },
+    }),
+  ],
 });
+
+export type Auth = typeof auth;
