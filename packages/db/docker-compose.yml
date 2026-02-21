@@ -1,0 +1,38 @@
+name: chatty-db
+
+services:
+  postgres:
+    image: postgres
+    container_name: chatty
+    environment:
+      POSTGRES_DB: chatty
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - chatty_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: chatty-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - chatty_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  chatty_postgres_data:
+  chatty_redis_data:
