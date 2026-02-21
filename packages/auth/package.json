@@ -11,10 +11,12 @@
   },
   "scripts": {},
   "dependencies": {
+    "@better-auth/stripe": "^1.4.18",
     "@chat-application/db": "workspace:*",
     "@chat-application/env": "workspace:*",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
+    "stripe": "^20.3.1",
     "zod": "catalog:"
   },
   "devDependencies": {
