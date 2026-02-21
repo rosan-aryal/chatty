@@ -3,22 +3,14 @@ import { redirect } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Bell } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
+import { NotificationBell } from "@/components/sidebar/notification-bell";
 import { WsProvider } from "@/components/chat/ws-provider";
 
 export default async function ChatLayout({
@@ -56,7 +48,7 @@ export default async function ChatLayout({
             </div>
             <div className="flex items-center gap-2">
               <ModeToggle />
-              <Bell className="h-4 w-4" />
+              <NotificationBell />
             </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
