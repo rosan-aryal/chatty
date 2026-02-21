@@ -1,5 +1,7 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, index, pgEnum } from "drizzle-orm/pg-core";
+
+export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -7,6 +9,12 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  gender: genderEnum("gender"),
+  country: text("country"),
+  onboarded: boolean("onboarded").default(false).notNull(),
+  isPremium: boolean("is_premium").default(false).notNull(),
+  stripeCustomerId: text("stripe_customer_id"),
+  isAnonymous: boolean("is_anonymous").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
