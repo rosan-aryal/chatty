@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Bell } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
+import { WsProvider } from "@/components/chat/ws-provider";
 
 export default async function ChatLayout({
   children,
@@ -41,24 +42,26 @@ export default async function ChatLayout({
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex items-center justify-between px-4 py-1.5 border-b">
-          <div className="flex sticky w-full z-50 top-0 left-0 right-0  items-center gap-2 ">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-vertical:h-4 data-vertical:self-auto"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <ModeToggle />
-            <Bell className="h-4 w-4" />
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+    <WsProvider>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="flex items-center justify-between px-4 py-1.5 border-b">
+            <div className="flex sticky w-full z-50 top-0 left-0 right-0  items-center gap-2 ">
+              <SidebarTrigger className="-ml-1" />
+              <Separator
+                orientation="vertical"
+                className="mr-2 data-vertical:h-4 data-vertical:self-auto"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <ModeToggle />
+              <Bell className="h-4 w-4" />
+            </div>
+          </header>
+          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </WsProvider>
   );
 }
