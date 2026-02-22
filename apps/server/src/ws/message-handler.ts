@@ -20,7 +20,7 @@ interface WsMessage {
 }
 
 export async function handleWsMessage(ws: ServerWebSocket<WsUserData>, raw: string, userData: WsUserData) {
-  const { userId, gender, country: _country, isPremium } = userData;
+  const { userId, gender, country, isPremium } = userData;
 
   let msg: WsMessage;
   try {
@@ -34,7 +34,7 @@ export async function handleWsMessage(ws: ServerWebSocket<WsUserData>, raw: stri
     case "matchmaking:join": {
       try {
         const { queueKey } = await matchmakingController.handleJoinQueue(
-          userId, gender, isPremium, msg.data?.genderPreference
+          userId, gender, country, isPremium, msg.data?.genderPreference, msg.data?.countryPreference
         );
         userQueueKeys.set(userId, queueKey);
 

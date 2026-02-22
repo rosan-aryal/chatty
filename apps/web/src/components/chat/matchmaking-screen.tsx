@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CountrySelector } from "@/components/country-selector";
 
 interface MatchmakingScreenProps {
   status: "idle" | "searching" | "matched";
-  onStartSearch: (genderPreference?: string) => void;
+  onStartSearch: (genderPreference?: string, countryPreference?: string) => void;
   onCancel: () => void;
   isPremium?: boolean;
+  userCountry?: string;
   partnerName?: string;
 }
 
@@ -18,10 +20,12 @@ export function MatchmakingScreen({
   onStartSearch,
   onCancel,
   isPremium,
+  userCountry,
   partnerName,
 }: MatchmakingScreenProps) {
   const [timeLeft, setTimeLeft] = useState(60);
   const [genderPref, setGenderPref] = useState<string | undefined>();
+  const [countryPref, setCountryPref] = useState<string>(userCountry || "any");
 
   useEffect(() => {
     if (status !== "searching") {
@@ -121,7 +125,16 @@ export function MatchmakingScreen({
         </div>
       )}
 
-      <Button size="lg" onClick={() => onStartSearch(genderPref)} className="gap-2 px-8">
+      <div className="w-full max-w-xs space-y-2">
+        <span className="text-xs text-muted-foreground">Country preference:</span>
+        <CountrySelector
+          value={countryPref}
+          onChange={setCountryPref}
+          showAny
+        />
+      </div>
+
+      <Button size="lg" onClick={() => onStartSearch(genderPref, countryPref === "any" ? undefined : countryPref)} className="gap-2 px-8">
         <Sparkles className="h-4 w-4" />
         Start Chat
       </Button>

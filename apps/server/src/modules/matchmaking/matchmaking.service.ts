@@ -19,6 +19,7 @@ function generateAnonymousName(): string {
 export interface QueueEntry {
   userId: string;
   gender?: string;
+  country?: string;
   isPremium: boolean;
   timestamp: number;
 }
@@ -29,10 +30,19 @@ export class MatchmakingService {
 
   constructor(private redis: RedisClient) {}
 
-  async joinQueue(entry: QueueEntry, genderPreference?: string): Promise<string> {
-    const queueKey = genderPreference
-      ? `${this.QUEUE_PREFIX}${genderPreference}`
-      : `${this.QUEUE_PREFIX}random`;
+  async joinQueue(entry: QueueEntry, genderPreference?: string, countryPreference?: string): Promise<string> {
+    let queueKey = `${this.QUEUE_PREFIX}`;
+    const parts: string[] = [];
+
+    if (countryPreference && countryPreference !== "any") {
+      parts.push(`country:${countryPreference}`);
+    }
+    if (genderPreference) {
+      parts.push(`gender:${genderPreference}`);
+    }
+
+    queueKey += parts.length > 0 ? parts.join(":") : "random";
+
     await this.redis.send("LPUSH", [queueKey, JSON.stringify(entry)]);
     return queueKey;
   }

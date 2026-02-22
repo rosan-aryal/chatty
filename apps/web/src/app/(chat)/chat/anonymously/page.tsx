@@ -6,6 +6,7 @@ import { ChatWindow } from "@/components/chat/chat-window";
 import { Button } from "@/components/ui/button";
 import { UserPlus, RotateCcw } from "lucide-react";
 import { useAddFriend } from "@/hooks/use-add-friend";
+import { useProfile } from "@/hooks/use-profile";
 
 export default function AnonymousChatPage() {
   const {
@@ -23,6 +24,7 @@ export default function AnonymousChatPage() {
     reset,
   } = useAnonymousChat();
 
+  const { data: profile } = useProfile();
   const addFriend = useAddFriend();
 
   const handleAddFriend = () => {
@@ -85,6 +87,8 @@ export default function AnonymousChatPage() {
         onStartSearch={startSearch}
         onCancel={cancelSearch}
         partnerName={partnerName}
+        isPremium={profile?.isPremium}
+        userCountry={profile?.country}
       />
     </div>
   );

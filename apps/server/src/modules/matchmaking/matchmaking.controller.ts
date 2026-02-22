@@ -6,14 +6,16 @@ export class MatchmakingController {
   async handleJoinQueue(
     userId: string,
     gender: string | undefined,
+    country: string | undefined,
     isPremium: boolean,
     genderPreference?: string,
+    countryPreference?: string,
   ): Promise<{ queueKey: string }> {
     if (genderPreference && !isPremium) {
       throw new Error("Gender preference matching requires premium");
     }
-    const entry: QueueEntry = { userId, gender, isPremium, timestamp: Date.now() };
-    const queueKey = await this.matchmakingService.joinQueue(entry, genderPreference);
+    const entry: QueueEntry = { userId, gender, country, isPremium, timestamp: Date.now() };
+    const queueKey = await this.matchmakingService.joinQueue(entry, genderPreference, countryPreference);
     return { queueKey };
   }
 

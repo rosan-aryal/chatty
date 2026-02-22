@@ -56,9 +56,9 @@ export function useAnonymousChat() {
     return () => unsubs.forEach((unsub) => unsub());
   }, []);
 
-  const startSearch = useCallback((genderPreference?: string) => {
+  const startSearch = useCallback((genderPreference?: string, countryPreference?: string) => {
     setStatus("searching");
-    wsClient.send("matchmaking:join", { genderPreference });
+    wsClient.send("matchmaking:join", { genderPreference, countryPreference });
   }, []);
 
   const cancelSearch = useCallback(() => {
