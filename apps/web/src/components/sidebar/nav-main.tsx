@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -17,95 +16,13 @@ import {
 import { UserPlus, Check, X, Clock, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { env } from "@chat-application/env/web";
-import { toast } from "sonner";
-
-const API = env.NEXT_PUBLIC_SERVER_URL;
-
-interface Friend {
-  id: string;
-  friendshipId: string;
-  name: string;
-  image?: string;
-  online?: boolean;
-}
-
-interface PendingRequest {
-  id: string;
-  requester: {
-    id: string;
-    name: string;
-    image?: string;
-  };
-  createdAt: string;
-}
+import { useFriends, usePendingRequests, useAcceptFriend, useRejectFriend } from "@/hooks/use-friends";
 
 export function NavMain() {
-  const queryClient = useQueryClient();
-
-  // Fetch accepted friends
-  const { data: friends = [], isLoading: friendsLoading } = useQuery<Friend[]>({
-    queryKey: ["friends"],
-    queryFn: async () => {
-      const res = await fetch(`${API}/api/friends`, {
-        credentials: "include",
-      });
-      if (!res.ok) return [];
-      return res.json();
-    },
-  });
-
-  // Fetch pending friend requests
-  const { data: pendingRequests = [], isLoading: pendingLoading } = useQuery<
-    PendingRequest[]
-  >({
-    queryKey: ["friends", "pending"],
-    queryFn: async () => {
-      const res = await fetch(`${API}/api/friends/pending`, {
-        credentials: "include",
-      });
-      if (!res.ok) return [];
-      return res.json();
-    },
-  });
-
-  // Accept friend request
-  const acceptMutation = useMutation({
-    mutationFn: async (requestId: string) => {
-      const res = await fetch(`${API}/api/friends/${requestId}/accept`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to accept request");
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-      toast.success("Friend request accepted!");
-    },
-    onError: () => {
-      toast.error("Failed to accept friend request");
-    },
-  });
-
-  // Reject friend request
-  const rejectMutation = useMutation({
-    mutationFn: async (requestId: string) => {
-      const res = await fetch(`${API}/api/friends/${requestId}/reject`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to reject request");
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-      toast.success("Friend request rejected");
-    },
-    onError: () => {
-      toast.error("Failed to reject friend request");
-    },
-  });
+  const { data: friends = [], isLoading: friendsLoading } = useFriends();
+  const { data: pendingRequests = [], isLoading: pendingLoading } = usePendingRequests();
+  const acceptMutation = useAcceptFriend();
+  const rejectMutation = useRejectFriend();
 
   const onlineFriends = friends.filter((f) => f.online);
   const offlineFriends = friends.filter((f) => !f.online);

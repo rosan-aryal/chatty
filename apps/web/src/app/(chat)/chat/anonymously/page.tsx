@@ -5,8 +5,7 @@ import { MatchmakingScreen } from "@/components/chat/matchmaking-screen";
 import { ChatWindow } from "@/components/chat/chat-window";
 import { Button } from "@/components/ui/button";
 import { UserPlus, RotateCcw } from "lucide-react";
-import { toast } from "sonner";
-import { env } from "@chat-application/env/web";
+import { useAddFriend } from "@/hooks/use-add-friend";
 
 export default function AnonymousChatPage() {
   const {
@@ -24,27 +23,11 @@ export default function AnonymousChatPage() {
     reset,
   } = useAnonymousChat();
 
-  const handleAddFriend = async () => {
+  const addFriend = useAddFriend();
+
+  const handleAddFriend = () => {
     if (!partnerId) return;
-    try {
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_SERVER_URL}/api/friends/request`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ addresseeId: partnerId }),
-        },
-      );
-      if (res.ok) {
-        toast.success("Friend request sent!");
-      } else {
-        const data = await res.json();
-        toast.error(data.error || "Failed to send request");
-      }
-    } catch {
-      toast.error("Something went wrong");
-    }
+    addFriend.mutate(partnerId);
   };
 
   if (status === "ended") {
