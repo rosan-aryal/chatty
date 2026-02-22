@@ -1,84 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus, Hash, Lock, Users } from "lucide-react";
-import { toast } from "sonner";
-import { env } from "@chat-application/env/web";
 import Link from "next/link";
-
-const API = env.NEXT_PUBLIC_SERVER_URL;
+import { usePublicGroups, useMyGroups, useJoinGroup, useJoinByCode } from "@/hooks/use-groups";
 
 export default function GroupsPage() {
   const [tab, setTab] = useState<"public" | "mine">("public");
   const [showJoinCode, setShowJoinCode] = useState(false);
   const [joinCode, setJoinCode] = useState("");
-  const queryClient = useQueryClient();
 
-  const { data: publicGroups = [] } = useQuery({
-    queryKey: ["groups", "public"],
-    queryFn: async () => {
-      const res = await fetch(`${API}/api/groups/public`, {
-        credentials: "include",
-      });
-      return res.json();
-    },
-    enabled: tab === "public",
-  });
-
-  const { data: myGroups = [] } = useQuery({
-    queryKey: ["groups", "mine"],
-    queryFn: async () => {
-      const res = await fetch(`${API}/api/groups/mine`, {
-        credentials: "include",
-      });
-      return res.json();
-    },
-    enabled: tab === "mine",
-  });
-
-  const joinPublic = useMutation({
-    mutationFn: async (groupId: string) => {
-      const res = await fetch(`${API}/api/groups/${groupId}/join`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const d = await res.json();
-        throw new Error(d.error);
-      }
-      return res.json();
-    },
-    onSuccess: () => {
-      toast.success("Joined group!");
-      queryClient.invalidateQueries({ queryKey: ["groups"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const joinByCode = useMutation({
-    mutationFn: async (code: string) => {
-      const res = await fetch(`${API}/api/groups/join-code`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      });
-      if (!res.ok) {
-        const d = await res.json();
-        throw new Error(d.error);
-      }
-      return res.json();
-    },
-    onSuccess: () => {
-      toast.success("Joined group!");
-      setShowJoinCode(false);
-      setJoinCode("");
-      queryClient.invalidateQueries({ queryKey: ["groups"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
+  const { data: publicGroups = [] } = usePublicGroups(tab === "public");
+  const { data: myGroups = [] } = useMyGroups(tab === "mine");
+  const joinPublic = useJoinGroup();
+  const joinByCode = useJoinByCode();
 
   return (
     <div className="flex h-full flex-col p-6">
@@ -217,7 +153,14 @@ export default function GroupsPage() {
               </Button>
               <Button
                 size="sm"
-                onClick={() => joinByCode.mutate(joinCode)}
+                onClick={() => {
+                  joinByCode.mutate(joinCode, {
+                    onSuccess: () => {
+                      setShowJoinCode(false);
+                      setJoinCode("");
+                    },
+                  });
+                }}
                 disabled={!joinCode.trim()}
               >
                 Join

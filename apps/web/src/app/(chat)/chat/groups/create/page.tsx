@@ -3,50 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { env } from "@chat-application/env/web";
 import { Copy, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import Link from "next/link";
-
-const API = env.NEXT_PUBLIC_SERVER_URL;
+import { useCreateGroup } from "@/hooks/use-create-group";
 
 export default function CreateGroupPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [type, setType] = useState<"public" | "private">("public");
   const [maxMembers, setMaxMembers] = useState(50);
-  const [submitting, setSubmitting] = useState(false);
-  const [createdGroup, setCreatedGroup] = useState<any>(null);
-
-  const handleCreate = async () => {
-    if (!name.trim()) {
-      toast.error("Group name is required");
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const res = await fetch(`${API}/api/groups`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, type, maxMembers }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setCreatedGroup(data);
-        toast.success("Group created!");
-      } else {
-        const data = await res.json();
-        toast.error(data.error || "Failed to create group");
-      }
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const { createGroup, isPending, createdGroup } = useCreateGroup();
 
   // Success state -- show invite code and link to group
   if (createdGroup) {
@@ -66,7 +33,7 @@ export default function CreateGroupPage() {
             </span>
             <button
               onClick={() => {
-                navigator.clipboard.writeText(createdGroup.inviteCode);
+                navigator.clipboard.writeText(createdGroup.inviteCode!);
                 toast.success("Code copied!");
               }}
               className="text-muted-foreground hover:text-foreground"
@@ -144,11 +111,11 @@ export default function CreateGroupPage() {
         </div>
 
         <Button
-          onClick={handleCreate}
-          disabled={submitting}
+          onClick={() => createGroup({ name, type, maxMembers })}
+          disabled={isPending}
           className="w-full"
         >
-          {submitting ? "Creating..." : "Create Group"}
+          {isPending ? "Creating..." : "Create Group"}
         </Button>
       </div>
     </div>
