@@ -6,6 +6,7 @@ import { Crown, Shield, ExternalLink, Loader2, Save } from "lucide-react";
 import Link from "next/link";
 import { useProfile } from "@/hooks/use-profile";
 import { useUpdateProfile, useToggleVisibility, useBillingPortal } from "@/hooks/use-settings";
+import { CountrySelector } from "@/components/country-selector";
 
 export default function SettingsPage() {
   const { data: profile, isLoading } = useProfile();
@@ -83,12 +84,9 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Country</label>
-              <input
-                type="text"
+              <CountrySelector
                 value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                placeholder="Enter your country"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                onChange={(code) => setCountry(code)}
               />
             </div>
             <Button

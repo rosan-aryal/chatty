@@ -7,9 +7,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Settings } from "lucide-react";
+import { Crown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export function NavPlatform() {
+export function NavPlatform({ isPremium }: { isPremium: boolean }) {
+  const router = useRouter();
+
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -20,7 +23,26 @@ export function NavPlatform() {
             variant={"outline"}
             render={<a href={"/chat/anonymously"} />}
           >
-            <span>Chat Anonymously</span>
+            <span>Random Chat</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            className="border-primary border"
+            variant={"outline"}
+            onClick={() => {
+              if (isPremium) {
+                router.push("/chat/anonymously?genderPref=true" as any);
+              } else {
+                router.push("/pricing" as any);
+              }
+            }}
+          >
+            <Crown className="h-4 w-4" />
+            <span>Gender Chat</span>
+            {!isPremium && (
+              <span className="ml-auto text-[10px] font-medium text-muted-foreground">PRO</span>
+            )}
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
@@ -30,15 +52,6 @@ export function NavPlatform() {
             render={<a href={"/chat/groups"} />}
           >
             <span>Group Chats</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-        <SidebarMenuItem>
-          <SidebarMenuButton
-            variant={"outline"}
-            render={<a href={"/chat/settings"} />}
-          >
-            <Settings className="h-4 w-4" />
-            <span>Settings</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

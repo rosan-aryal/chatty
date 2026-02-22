@@ -1,7 +1,6 @@
-import * as React from "react";
+"use client";
 
 import { NavMain } from "@/components/sidebar/nav-main";
-
 import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
@@ -15,27 +14,16 @@ import {
 } from "@/components/ui/sidebar";
 import { LifeBuoyIcon, SendIcon } from "lucide-react";
 import { NavPlatform } from "./nav-platform";
+import { useProfile } from "@/hooks/use-profile";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: <LifeBuoyIcon />,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: <SendIcon />,
-    },
-  ],
-};
+const navSecondary = [
+  { title: "Support", url: "/support", icon: <LifeBuoyIcon /> },
+  { title: "Feedback", url: "/feedback", icon: <SendIcon /> },
+];
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: profile } = useProfile();
+
   return (
     <Sidebar
       variant="floating"
@@ -62,11 +50,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain />
-        <NavPlatform />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavPlatform isPremium={profile?.isPremium ?? false} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser
+          user={{
+            name: profile?.name ?? "",
+            email: profile?.email ?? "",
+            avatar: profile?.image ?? "",
+          }}
+        />
       </SidebarFooter>
     </Sidebar>
   );

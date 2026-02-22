@@ -5,6 +5,7 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { CountrySelector } from "@/components/country-selector";
 import { env } from "@chat-application/env/web";
 
 const onboardingSchema = z.object({
@@ -87,12 +88,9 @@ export default function OnboardingPage() {
             {(field) => (
               <div className="space-y-2">
                 <label className="text-sm font-medium">Country</label>
-                <input
-                  type="text"
-                  placeholder="e.g. United States"
+                <CountrySelector
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  onChange={(code) => field.handleChange(code)}
                 />
               </div>
             )}
