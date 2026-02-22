@@ -2,12 +2,13 @@
 
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import type { Notification } from "@/types/notifications";
 import { wsClient } from "@/lib/ws-client";
 import { env } from "@chat-application/env/web";
 
 const API = env.NEXT_PUBLIC_SERVER_URL;
 
-async function fetchNotifications() {
+async function fetchNotifications(): Promise<Notification[]> {
   const res = await fetch(`${API}/api/notifications`, {
     credentials: "include",
   });
@@ -25,7 +26,7 @@ async function fetchUnreadCount(): Promise<number> {
 export function useNotifications() {
   const queryClient = useQueryClient();
 
-  const { data: notifications = [], ...query } = useQuery({
+  const { data: notifications = [], ...query } = useQuery<Notification[]>({
     queryKey: ["notifications"],
     queryFn: fetchNotifications,
   });
