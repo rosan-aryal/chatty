@@ -26,6 +26,10 @@
     "db:studio": "turbo -F @chat-application/db db:studio",
     "db:generate": "turbo -F @chat-application/db db:generate",
     "db:migrate": "turbo -F @chat-application/db db:migrate",
+    "db:start": "turbo -F @chat-application/db db:start",
+    "db:watch": "turbo -F @chat-application/db db:watch",
+    "db:stop": "turbo -F @chat-application/db db:stop",
+    "db:down": "turbo -F @chat-application/db db:down",
     "check": "oxlint && oxfmt --write"
   },
   "dependencies": {
