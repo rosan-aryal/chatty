@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import {
   MessageCircle,
   Users,
@@ -9,9 +8,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-import { env } from "@chat-application/env/web";
-
-const API = env.NEXT_PUBLIC_SERVER_URL;
+import { useProfile } from "@/hooks/use-profile";
 
 const actions = [
   {
@@ -42,15 +39,7 @@ const actions = [
 ];
 
 export default function ChatDashboard() {
-  const { data: profile } = useQuery({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const res = await fetch(`${API}/api/user/profile`, {
-        credentials: "include",
-      });
-      return res.json();
-    },
-  });
+  const { data: profile } = useProfile();
 
   return (
     <div className="flex h-full flex-col p-6 md:p-8">

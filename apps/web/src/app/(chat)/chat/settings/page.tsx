@@ -1,29 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { env } from "@chat-application/env/web";
-import { authClient } from "@/lib/auth-client";
 import { Crown, Shield, ExternalLink, Loader2, Save } from "lucide-react";
 import Link from "next/link";
-
-const API = env.NEXT_PUBLIC_SERVER_URL;
+import { useProfile } from "@/hooks/use-profile";
+import { useUpdateProfile, useToggleVisibility, useBillingPortal } from "@/hooks/use-settings";
 
 export default function SettingsPage() {
-  const queryClient = useQueryClient();
-
-  const { data: profile, isLoading } = useQuery({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const res = await fetch(`${API}/api/user/profile`, {
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to load profile");
-      return res.json();
-    },
-  });
+  const { data: profile, isLoading } = useProfile();
+  const updateProfile = useUpdateProfile();
+  const toggleVisibility = useToggleVisibility();
+  const handleBillingPortal = useBillingPortal();
 
   const [gender, setGender] = useState("");
   const [country, setCountry] = useState("");
@@ -36,54 +24,6 @@ export default function SettingsPage() {
       setIsAnonymous(profile.isAnonymous ?? true);
     }
   }, [profile]);
-
-  const updateProfile = useMutation({
-    mutationFn: async () => {
-      const res = await fetch(`${API}/api/user/onboard`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gender, country }),
-      });
-      if (!res.ok) throw new Error("Failed to update");
-      return res.json();
-    },
-    onSuccess: () => {
-      toast.success("Profile updated");
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-    },
-    onError: () => toast.error("Failed to update profile"),
-  });
-
-  const toggleVisibility = useMutation({
-    mutationFn: async (value: boolean) => {
-      const res = await fetch(`${API}/api/user/visibility`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isAnonymous: value }),
-      });
-      if (!res.ok) throw new Error("Failed to toggle visibility");
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-    },
-    onError: () => toast.error("Failed to update visibility"),
-  });
-
-  const handleBillingPortal = async () => {
-    try {
-      const result = await (authClient as any).subscription.billingPortal({
-        returnUrl: window.location.href,
-      });
-      if (result?.data?.url) {
-        window.location.href = result.data.url;
-      }
-    } catch {
-      toast.error("Could not open billing portal");
-    }
-  };
 
   if (isLoading) {
     return (
@@ -153,7 +93,7 @@ export default function SettingsPage() {
             </div>
             <Button
               size="sm"
-              onClick={() => updateProfile.mutate()}
+              onClick={() => updateProfile.mutate({ gender, country })}
               disabled={updateProfile.isPending}
               className="gap-1.5"
             >
