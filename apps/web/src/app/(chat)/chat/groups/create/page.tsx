@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function CreateGroupPage() {
-  redirect("/chat/groups");
+  redirect("/chat/groups" as any);
 }

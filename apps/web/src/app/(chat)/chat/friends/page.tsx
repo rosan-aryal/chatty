@@ -91,7 +91,7 @@ export default function FriendsPage() {
             {friends.map((friend) => (
               <Link
                 key={friend.id}
-                href={`/chat/friends/${friend.friendshipId}`}
+                href={`/chat/friends/${friend.friendshipId}` as any}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
               >
                 <div className="relative">

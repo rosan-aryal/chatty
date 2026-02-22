@@ -15,6 +15,13 @@
       "when": 1771750910456,
       "tag": "0001_tidy_the_executioner",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771753181744,
+      "tag": "0002_silly_martin_li",
+      "breakpoints": true
     }
   ]
 }

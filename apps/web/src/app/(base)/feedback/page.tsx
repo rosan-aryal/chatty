@@ -25,7 +25,7 @@ export default function FeedbackPage() {
     onSubmit: async ({ value }) => {
       const parsed = feedbackSchema.safeParse({ ...value, rating });
       if (!parsed.success) {
-        toast.error(parsed.error.errors[0].message);
+        toast.error(parsed.error.issues[0].message);
         return;
       }
       const res = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/support/feedback`, {

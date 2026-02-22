@@ -21,7 +21,7 @@ export default function SupportPage() {
     onSubmit: async ({ value }) => {
       const parsed = supportSchema.safeParse(value);
       if (!parsed.success) {
-        toast.error(parsed.error.errors[0].message);
+        toast.error(parsed.error.issues[0].message);
         return;
       }
       const res = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/support/ticket`, {

@@ -92,7 +92,7 @@ export function GroupSettings({ groupId, open, onClose }: GroupSettingsProps) {
     },
     onSuccess: () => {
       onClose();
-      router.push("/chat/groups");
+      router.push("/chat/groups" as any);
     },
   });
 

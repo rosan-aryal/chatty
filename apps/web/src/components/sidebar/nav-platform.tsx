@@ -14,10 +14,10 @@ export function NavPlatform({ isPremium }: { isPremium: boolean }) {
   const router = useRouter();
 
   const genderOptions = [
-    { label: "F → F Matching", pref: "female", icon: "F→F" },
-    { label: "F → M Matching", pref: "male", icon: "F→M" },
-    { label: "M → F Matching", pref: "female", icon: "M→F" },
-    { label: "M → M Matching", pref: "male", icon: "M→M" },
+    { label: "F → F Matching", pref: "female", icon: "F→F", free: false },
+    { label: "F → M Matching", pref: "male", icon: "F→M", free: false },
+    { label: "M → F Matching", pref: "female", icon: "M→F", free: false },
+    { label: "M → M Matching", pref: "male", icon: "M→M", free: true },
   ];
 
   return (
@@ -39,7 +39,7 @@ export function NavPlatform({ isPremium }: { isPremium: boolean }) {
             <SidebarMenuButton
               tooltip={opt.label}
               onClick={() => {
-                if (isPremium) {
+                if (opt.free || isPremium) {
                   router.push(`/chat/anonymously?genderPref=${opt.pref}` as any);
                 } else {
                   router.push("/pricing" as any);
@@ -50,7 +50,7 @@ export function NavPlatform({ isPremium }: { isPremium: boolean }) {
                 {opt.icon}
               </span>
               <span>{opt.label}</span>
-              {!isPremium && (
+              {!opt.free && !isPremium && (
                 <Crown className="ml-auto h-3 w-3 text-muted-foreground" />
               )}
             </SidebarMenuButton>
