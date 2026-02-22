@@ -3,4 +3,5 @@ export interface ChatMessage {
   senderName: string;
   timestamp: string;
   isOwn: boolean;
+  senderId?: string;
 }

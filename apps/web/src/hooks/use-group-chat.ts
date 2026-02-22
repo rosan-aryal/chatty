@@ -2,12 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { Group } from "@/types/groups";
 import type { ChatMessage } from "@/types/chat";
+import { useProfile } from "@/hooks/use-profile";
 import { wsClient } from "@/lib/ws-client";
 import { env } from "@chat-application/env/web";
 
 const API = env.NEXT_PUBLIC_SERVER_URL;
 
 export function useGroupChat(groupId: string) {
+  const { data: profile } = useProfile();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const typingTimeouts = useRef<Map<string, ReturnType<typeof setTimeout>>>(
@@ -37,16 +39,17 @@ export function useGroupChat(groupId: string) {
 
   // Seed messages from history
   useEffect(() => {
-    if (history.length > 0) {
+    if (history.length > 0 && profile) {
       const mapped = [...history].reverse().map((m: any) => ({
         content: m.content,
-        senderName: m.sender?.name || "Unknown",
+        senderName: m.senderId === profile.id ? "You" : (m.sender?.name || "Unknown"),
         timestamp: m.createdAt,
-        isOwn: false,
+        isOwn: m.senderId === profile.id,
+        senderId: m.senderId,
       }));
       setMessages(mapped);
     }
-  }, [history]);
+  }, [history, profile]);
 
   // Real-time events
   useEffect(() => {
@@ -60,6 +63,7 @@ export function useGroupChat(groupId: string) {
             senderName: data.senderName,
             timestamp: data.timestamp,
             isOwn: false,
+            senderId: data.senderId,
           },
         ]);
       }),
@@ -104,10 +108,11 @@ export function useGroupChat(groupId: string) {
           senderName: "You",
           timestamp: new Date().toISOString(),
           isOwn: true,
+          senderId: profile?.id,
         },
       ]);
     },
-    [groupId],
+    [groupId, profile],
   );
 
   const handleTyping = useCallback(() => {
