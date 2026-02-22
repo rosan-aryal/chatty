@@ -46,6 +46,8 @@ export function useGroupChat(groupId: string) {
         timestamp: m.createdAt,
         isOwn: m.senderId === profile.id,
         senderId: m.senderId,
+        senderImage: m.sender?.image,
+        isAnonymous: m.sender?.isAnonymous ?? false,
       }));
       setMessages(mapped);
     }
@@ -64,6 +66,8 @@ export function useGroupChat(groupId: string) {
             timestamp: data.timestamp,
             isOwn: false,
             senderId: data.senderId,
+            senderImage: data.senderImage,
+            isAnonymous: data.isAnonymous ?? false,
           },
         ]);
       }),
@@ -109,6 +113,8 @@ export function useGroupChat(groupId: string) {
           timestamp: new Date().toISOString(),
           isOwn: true,
           senderId: profile?.id,
+          senderImage: profile?.image,
+          isAnonymous: profile?.isAnonymous ?? false,
         },
       ]);
     },

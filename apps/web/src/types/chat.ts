@@ -4,4 +4,6 @@ export interface ChatMessage {
   timestamp: string;
   isOwn: boolean;
   senderId?: string;
+  senderImage?: string;
+  isAnonymous?: boolean;
 }

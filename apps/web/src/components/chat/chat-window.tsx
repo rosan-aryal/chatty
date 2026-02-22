@@ -11,6 +11,8 @@ interface Message {
   senderName: string;
   timestamp: string;
   isOwn: boolean;
+  senderImage?: string;
+  isAnonymous?: boolean;
 }
 
 interface ChatWindowProps {
