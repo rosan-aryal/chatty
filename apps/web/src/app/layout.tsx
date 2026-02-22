@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Libre_Baskerville, Lora } from "next/font/google";
 
 import "../index.css";
-import Header from "@/components/header";
+
 import Providers from "@/components/providers";
 
 const fontSans = Libre_Baskerville({
@@ -37,10 +37,7 @@ export default function RootLayout({
         className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
       >
         <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
-            <Header />
-            {children}
-          </div>
+          <div className="grid grid-rows-[auto_1fr] h-svh">{children}</div>
         </Providers>
       </body>
     </html>
