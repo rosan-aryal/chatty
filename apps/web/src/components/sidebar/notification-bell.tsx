@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
+import { getNotificationText, formatRelativeTime } from "@/lib/notification-utils";
 import { cn } from "@/lib/utils";
 
 export function NotificationBell() {
@@ -110,35 +111,4 @@ export function NotificationBell() {
       )}
     </div>
   );
-}
-
-function getNotificationText(n: any): string {
-  switch (n.type) {
-    case "friend_request":
-      return "You received a new friend request";
-    case "friend_accepted":
-      return "Your friend request was accepted";
-    case "group_invite":
-      return "You were invited to a group";
-    case "message":
-      return "You have a new message";
-    default:
-      return "New notification";
-  }
-}
-
-function formatRelativeTime(dateString: string): string {
-  const now = Date.now();
-  const then = new Date(dateString).getTime();
-  const diffMs = now - then;
-  const diffSeconds = Math.floor(diffMs / 1000);
-  const diffMinutes = Math.floor(diffSeconds / 60);
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffSeconds < 60) return "just now";
-  if (diffMinutes < 60) return `${diffMinutes}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return new Date(dateString).toLocaleDateString();
 }

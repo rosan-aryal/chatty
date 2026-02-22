@@ -6,23 +6,20 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuBadge,
 } from "@/components/ui/sidebar";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { UserPlus, Check, X, Clock, Loader2 } from "lucide-react";
+import { UserPlus, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { useFriends, usePendingRequests, useAcceptFriend, useRejectFriend } from "@/hooks/use-friends";
+import { useFriends } from "@/hooks/use-friends";
+import { NavPendingRequests } from "./nav-pending-requests";
 
 export function NavMain() {
   const { data: friends = [], isLoading: friendsLoading } = useFriends();
-  const { data: pendingRequests = [], isLoading: pendingLoading } = usePendingRequests();
-  const acceptMutation = useAcceptFriend();
-  const rejectMutation = useRejectFriend();
 
   const onlineFriends = friends.filter((f) => f.online);
   const offlineFriends = friends.filter((f) => !f.online);
@@ -78,7 +75,6 @@ export function NavMain() {
                         {friend.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    {/* Online indicator */}
                     <span
                       className={cn(
                         "absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-sidebar",
@@ -96,67 +92,7 @@ export function NavMain() {
         </SidebarMenu>
       </SidebarGroup>
 
-      {/* Pending requests */}
-      {!pendingLoading && pendingRequests.length > 0 && (
-        <SidebarGroup>
-          <SidebarGroupLabel className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-2">
-              <Clock className="h-3 w-3" />
-              Pending Requests
-            </span>
-            <SidebarMenuBadge className="static">
-              {pendingRequests.length}
-            </SidebarMenuBadge>
-          </SidebarGroupLabel>
-
-          <SidebarMenu>
-            {pendingRequests.map((req) => (
-              <SidebarMenuItem key={req.id}>
-                <div className="flex w-full items-center gap-2 rounded-md px-2 py-1.5">
-                  <Avatar size="sm">
-                    {req.requester.image && (
-                      <AvatarImage
-                        src={req.requester.image}
-                        alt={req.requester.name}
-                      />
-                    )}
-                    <AvatarFallback>
-                      {req.requester.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-
-                  <span className="min-w-0 flex-1 truncate text-sm">
-                    {req.requester.name}
-                  </span>
-
-                  <div className="flex shrink-0 items-center gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-6 w-6 p-0 text-green-600 hover:bg-green-500/10 hover:text-green-600"
-                      onClick={() => acceptMutation.mutate(req.id)}
-                      disabled={acceptMutation.isPending}
-                    >
-                      <Check className="h-3.5 w-3.5" />
-                      <span className="sr-only">Accept</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-6 w-6 p-0 text-red-500 hover:bg-red-500/10 hover:text-red-500"
-                      onClick={() => rejectMutation.mutate(req.id)}
-                      disabled={rejectMutation.isPending}
-                    >
-                      <X className="h-3.5 w-3.5" />
-                      <span className="sr-only">Reject</span>
-                    </Button>
-                  </div>
-                </div>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-      )}
+      <NavPendingRequests />
     </>
   );
 }
