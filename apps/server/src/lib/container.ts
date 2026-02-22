@@ -8,6 +8,7 @@ import { GroupRepository } from "../modules/group/group.repository";
 import { ChatRepository } from "../modules/chat/chat.repository";
 import { BlogRepository } from "../modules/blog/blog.repository";
 import { ContactRepository } from "../modules/contact/contact.repository";
+import { SupportRepository } from "../modules/support/support.repository";
 
 import { UserService } from "../modules/user/user.service";
 import { FriendshipService } from "../modules/friendship/friendship.service";
@@ -17,6 +18,7 @@ import { ChatService } from "../modules/chat/chat.service";
 import { MatchmakingService } from "../modules/matchmaking/matchmaking.service";
 import { BlogService } from "../modules/blog/blog.service";
 import { ContactService } from "../modules/contact/contact.service";
+import { SupportService } from "../modules/support/support.service";
 
 import { UserController } from "../modules/user/user.controller";
 import { FriendshipController } from "../modules/friendship/friendship.controller";
@@ -26,6 +28,7 @@ import { ChatController } from "../modules/chat/chat.controller";
 import { MatchmakingController } from "../modules/matchmaking/matchmaking.controller";
 import { BlogController } from "../modules/blog/blog.controller";
 import { ContactController } from "../modules/contact/contact.controller";
+import { SupportController } from "../modules/support/support.controller";
 
 // Repositories
 const userRepo = new UserRepository(db);
@@ -35,6 +38,7 @@ const groupRepo = new GroupRepository(db);
 const chatRepo = new ChatRepository(db);
 const blogRepo = new BlogRepository(db);
 const contactRepo = new ContactRepository(db);
+const supportRepo = new SupportRepository(db);
 
 // Services
 const userService = new UserService(userRepo);
@@ -45,6 +49,7 @@ const chatService = new ChatService(chatRepo);
 const matchmakingService = new MatchmakingService(redis);
 const blogService = new BlogService(blogRepo);
 const contactService = new ContactService(contactRepo);
+const supportService = new SupportService(supportRepo);
 
 // Controllers
 export const userController = new UserController(userService);
@@ -55,6 +60,7 @@ export const chatController = new ChatController(chatService);
 export const matchmakingController = new MatchmakingController(matchmakingService);
 export const blogController = new BlogController(blogService);
 export const contactController = new ContactController(contactService);
+export const supportController = new SupportController(supportService);
 
 // Export services for WebSocket handler access
 export { chatService, groupService, friendshipService, matchmakingService, notificationService };

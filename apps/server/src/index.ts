@@ -13,6 +13,7 @@ import {
   chatController,
   blogController,
   contactController,
+  supportController,
 } from "./lib/container";
 import { createUserRoutes } from "./modules/user/user.routes";
 import { createFriendshipRoutes } from "./modules/friendship/friendship.routes";
@@ -21,6 +22,7 @@ import { createGroupRoutes } from "./modules/group/group.routes";
 import { createChatRoutes } from "./modules/chat/chat.routes";
 import { createBlogRoutes } from "./modules/blog/blog.routes";
 import { createContactRoutes } from "./modules/contact/contact.routes";
+import { createSupportRoutes } from "./modules/support/support.routes";
 
 const app = new Hono();
 
@@ -46,6 +48,7 @@ app.route("/api/groups", createGroupRoutes(groupController));
 app.route("/api/chat", createChatRoutes(chatController));
 app.route("/api/blog", createBlogRoutes(blogController));
 app.route("/api/contact", createContactRoutes(contactController));
+app.route("/api/support", createSupportRoutes(supportController));
 
 // WebSocket
 app.get("/ws", wsRoute);
