@@ -19,6 +19,7 @@ export const wsRoute = upgradeWebSocket(async (c) => {
   const userData: WsUserData = {
     userId: session.user.id,
     gender: (session.user as any).gender,
+    country: (session.user as any).country,
     isPremium: (session.user as any).isPremium ?? false,
   };
 
@@ -27,7 +28,7 @@ export const wsRoute = upgradeWebSocket(async (c) => {
       connectionManager.add(userData.userId, ws as any);
     },
     onMessage(event, ws) {
-      handleWsMessage(ws as any, event.data as string);
+      handleWsMessage(ws as any, event.data as string, userData);
     },
     onClose() {
       handleWsClose(userData.userId);

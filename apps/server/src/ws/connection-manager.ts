@@ -3,6 +3,7 @@ import type { ServerWebSocket } from "bun";
 export interface WsUserData {
   userId: string;
   gender?: string;
+  country?: string;
   isPremium: boolean;
 }
 

@@ -8,7 +8,7 @@ import {
 import { redis } from "../lib/redis";
 import type { ServerWebSocket } from "bun";
 
-// Track user state
+
 const userQueueKeys = new Map<string, string>();
 const userRooms = new Map<string, string>();
 const userAnonymousNames = new Map<string, Map<string, string>>();
@@ -19,8 +19,8 @@ interface WsMessage {
   data?: any;
 }
 
-export async function handleWsMessage(ws: ServerWebSocket<WsUserData>, raw: string) {
-  const { userId, gender, isPremium } = ws.data;
+export async function handleWsMessage(ws: ServerWebSocket<WsUserData>, raw: string, userData: WsUserData) {
+  const { userId, gender, country: _country, isPremium } = userData;
 
   let msg: WsMessage;
   try {
