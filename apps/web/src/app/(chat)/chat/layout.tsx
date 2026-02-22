@@ -26,11 +26,11 @@ export default async function ChatLayout({
   });
 
   if (!session?.user) {
-    redirect("/login");
+    redirect("/login" as any);
   }
 
-  if (!session.user.onboarded) {
-    redirect("/onboarding");
+  if (!(session.user as any).onboarded) {
+    redirect("/onboarding" as any);
   }
 
   return (

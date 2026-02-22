@@ -36,7 +36,7 @@ export default function PremiumPage() {
       <div className="w-full max-w-lg space-y-8">
         {/* Back link */}
         <Link
-          href="/chat/settings"
+          href={"/chat/settings" as any}
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />

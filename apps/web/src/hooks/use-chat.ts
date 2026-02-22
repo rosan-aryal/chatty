@@ -20,7 +20,7 @@ export function useAnonymousChat() {
   const [partnerName, setPartnerName] = useState("");
   const [partnerTyping, setPartnerTyping] = useState(false);
   const [partnerId, setPartnerId] = useState<string | null>(null);
-  const typingTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const typingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const unsubs = [

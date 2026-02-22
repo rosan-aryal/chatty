@@ -77,7 +77,7 @@ export default function CreateGroupPage() {
         )}
 
         <Button
-          onClick={() => router.push(`/chat/groups/${createdGroup.id}`)}
+          onClick={() => router.push(`/chat/groups/${createdGroup.id}` as any)}
         >
           Go to Group
         </Button>
@@ -88,7 +88,7 @@ export default function CreateGroupPage() {
   return (
     <div className="flex h-full flex-col p-6">
       <Link
-        href="/chat/groups"
+        href={"/chat/groups" as any}
         className="mb-6 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />

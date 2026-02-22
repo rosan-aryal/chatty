@@ -95,7 +95,7 @@ export default function GroupsPage() {
             <Lock className="h-3.5 w-3.5" />
             Join by Code
           </Button>
-          <Link href="/chat/groups/create">
+          <Link href={"/chat/groups/create" as any}>
             <Button size="sm" className="gap-1.5">
               <Plus className="h-3.5 w-3.5" />
               Create Group
@@ -154,7 +154,7 @@ export default function GroupsPage() {
           myGroups.map((gm: any) => (
             <Link
               key={gm.group?.id || gm.groupId}
-              href={`/chat/groups/${gm.group?.id || gm.groupId}`}
+              href={`/chat/groups/${gm.group?.id || gm.groupId}` as any}
             >
               <div className="flex cursor-pointer items-center gap-3 rounded-xl border border-border p-4 transition-colors hover:bg-muted/50">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">

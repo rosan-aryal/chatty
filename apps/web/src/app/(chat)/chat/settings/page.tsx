@@ -228,7 +228,7 @@ export default function SettingsPage() {
               </Button>
             </div>
           ) : (
-            <Link href="/chat/premium">
+            <Link href={"/chat/premium" as any}>
               <div className="rounded-xl border border-border p-4 transition-colors hover:bg-muted/50 cursor-pointer group">
                 <p className="text-sm font-medium flex items-center gap-2">
                   <Crown className="h-4 w-4" />

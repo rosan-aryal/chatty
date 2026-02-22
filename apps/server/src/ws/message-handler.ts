@@ -160,7 +160,7 @@ export async function handleWsMessage(ws: ServerWebSocket<WsUserData>, raw: stri
       const { groupId, content } = msg.data;
       const [saved] = await chatService.saveGroupMessage({ content, senderId: userId, groupId });
       const grp = await groupService.getById(groupId);
-      if (grp) {
+      if (grp && saved) {
         const memberIds = grp.members.map((m: any) => m.userId).filter((id: string) => id !== userId);
         const senderMember = grp.members.find((m: any) => m.userId === userId);
         connectionManager.broadcast(memberIds, {
@@ -186,7 +186,7 @@ export async function handleWsMessage(ws: ServerWebSocket<WsUserData>, raw: stri
       const [saved] = await chatService.saveFriendMessage({ content, senderId: userId, friendshipId });
       const fs = await friendshipService.listFriends(userId);
       const found = fs.find((f: any) => f.id === friendshipId);
-      if (found) {
+      if (found && saved) {
         const friendId = found.requesterId === userId ? found.addresseeId : found.requesterId;
         connectionManager.sendTo(friendId, {
           type: "friend:message",

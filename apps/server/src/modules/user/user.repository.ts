@@ -15,7 +15,7 @@ export class UserRepository {
 
   async updateProfile(
     id: string,
-    data: { gender?: string; country?: string; onboarded?: boolean; isAnonymous?: boolean }
+    data: { gender?: "male" | "female" | "other"; country?: string; onboarded?: boolean; isAnonymous?: boolean }
   ) {
     return this.db
       .update(user)

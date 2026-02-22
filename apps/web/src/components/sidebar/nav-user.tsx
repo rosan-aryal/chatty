@@ -102,18 +102,18 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => router.push("/chat/premium")}>
+              <DropdownMenuItem onClick={() => router.push("/chat/premium" as any)}>
                 <CrownIcon />
                 Upgrade to Premium
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => router.push("/chat/settings")}>
+              <DropdownMenuItem onClick={() => router.push("/chat/settings" as any)}>
                 <SettingsIcon />
                 Settings
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/chat/premium")}>
+              <DropdownMenuItem onClick={() => router.push("/chat/premium" as any)}>
                 <CreditCardIcon />
                 Billing
               </DropdownMenuItem>

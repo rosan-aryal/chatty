@@ -7,7 +7,7 @@ export class UserService {
     return this.userRepo.findById(userId);
   }
 
-  async onboard(userId: string, data: { gender: string; country: string }) {
+  async onboard(userId: string, data: { gender: "male" | "female" | "other"; country: string }) {
     return this.userRepo.updateProfile(userId, {
       ...data,
       onboarded: true,

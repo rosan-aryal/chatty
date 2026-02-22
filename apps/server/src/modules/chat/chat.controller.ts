@@ -5,7 +5,7 @@ export class ChatController {
   constructor(private chatService: ChatService) {}
 
   getGroupMessages = async (c: Context) => {
-    const { groupId } = c.req.param();
+    const groupId = c.req.param("groupId");
     const { limit, before } = c.req.query();
     const messages = await this.chatService.getGroupMessages(
       groupId,
@@ -16,7 +16,7 @@ export class ChatController {
   };
 
   getFriendMessages = async (c: Context) => {
-    const { friendshipId } = c.req.param();
+    const friendshipId = c.req.param("friendshipId");
     const { limit, before } = c.req.query();
     const messages = await this.chatService.getFriendMessages(
       friendshipId,

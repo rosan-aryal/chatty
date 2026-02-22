@@ -67,7 +67,7 @@ export default function ChatDashboard() {
       {/* Quick actions */}
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         {actions.map((action) => (
-          <Link key={action.title} href={action.href}>
+          <Link key={action.title} href={action.href as any}>
             <div className="group h-full cursor-pointer rounded-xl border border-border p-5 transition-all hover:border-primary/30 hover:bg-muted/50">
               <div
                 className={`mb-3 flex h-10 w-10 items-center justify-center rounded-lg ${action.bg}`}
@@ -88,7 +88,7 @@ export default function ChatDashboard() {
 
       {/* Premium upsell */}
       {profile && !profile.isPremium && (
-        <Link href="/chat/premium">
+        <Link href={"/chat/premium" as any}>
           <div className="cursor-pointer rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/5 to-orange-500/5 p-5 transition-all hover:from-amber-500/10 hover:to-orange-500/10">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500">

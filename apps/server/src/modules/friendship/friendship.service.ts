@@ -15,9 +15,9 @@ export class FriendshipService {
     await this.notificationService.create({
       userId: addresseeId,
       type: "friend_request",
-      data: { friendshipId: created.id, fromUserId: requesterId },
+      data: { friendshipId: created!.id, fromUserId: requesterId },
     });
-    return created;
+    return created!;
   }
 
   async acceptRequest(friendshipId: string, userId: string) {

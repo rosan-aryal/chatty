@@ -122,7 +122,7 @@ export default function Header2() {
                 >
                   <Link
                     prefetch={false}
-                    href={item.href}
+                    href={item.href as any}
                     className="text-foreground/80 hover:text-foreground relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
                   >
                     {hoveredItem === item.name && (
@@ -203,7 +203,7 @@ export default function Header2() {
                     <motion.div key={item.name} variants={mobileItemVariants}>
                       <Link
                         prefetch={false}
-                        href={item.href}
+                        href={item.href as any}
                         className="text-foreground hover:bg-muted block rounded-lg px-4 py-3 font-medium transition-colors duration-200"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
@@ -227,7 +227,7 @@ export default function Header2() {
                   </Link>
                   <Link
                     prefetch={false}
-                    href="/signup"
+                    href={"/signup" as any}
                     className="bg-foreground text-background hover:bg-foreground/90 block w-full rounded-lg py-3 text-center font-medium transition-all duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >

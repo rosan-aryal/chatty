@@ -28,7 +28,8 @@ interface FriendshipDetails {
 }
 
 export default function FriendChatPage() {
-  const { friendshipId } = useParams<{ friendshipId: string }>();
+  const params = useParams<{ friendshipId: string }>();
+  const friendshipId = params.friendshipId;
   const [messages, setMessages] = useState<
     Array<{
       content: string;
@@ -38,7 +39,7 @@ export default function FriendChatPage() {
     }>
   >([]);
   const [partnerTyping, setPartnerTyping] = useState(false);
-  const typingTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const typingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fetch friendship details to get partner info
   const { data: friendship } = useQuery<FriendshipDetails>({
