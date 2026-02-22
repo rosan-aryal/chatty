@@ -15,5 +15,8 @@ export function createGroupRoutes(controller: GroupController) {
   router.post("/:id/kick", controller.kick);
   router.delete("/:id", controller.deleteGroup);
   router.post("/:id/regenerate-code", controller.regenerateCode);
+  router.post("/:id/ban", controller.ban);
+  router.post("/:id/unban", controller.unban);
+  router.get("/:id/bans", controller.listBans);
   return router;
 }

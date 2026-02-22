@@ -56,4 +56,22 @@ export class GroupController {
     try { return c.json(await this.groupService.regenerateInviteCode(id, user.id)); }
     catch (e: any) { return c.json({ error: e.message }, 400); }
   };
+
+  ban = async (c: Context) => {
+    const user = c.get("user") as { id: string }; const id = c.req.param("id"); const { userId } = await c.req.json<{ userId: string }>();
+    try { return c.json(await this.groupService.ban(id, userId, user.id)); }
+    catch (e: any) { return c.json({ error: e.message }, 400); }
+  };
+
+  unban = async (c: Context) => {
+    const user = c.get("user") as { id: string }; const id = c.req.param("id"); const { userId } = await c.req.json<{ userId: string }>();
+    try { return c.json(await this.groupService.unban(id, userId, user.id)); }
+    catch (e: any) { return c.json({ error: e.message }, 400); }
+  };
+
+  listBans = async (c: Context) => {
+    const user = c.get("user") as { id: string }; const id = c.req.param("id");
+    try { return c.json(await this.groupService.listBans(id, user.id)); }
+    catch (e: any) { return c.json({ error: e.message }, 400); }
+  };
 }

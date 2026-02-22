@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { ChatWindow } from "@/components/chat/chat-window";
-import { Users } from "lucide-react";
+import { Users, Settings } from "lucide-react";
 import { useGroupChat } from "@/hooks/use-group-chat";
+import { GroupSettings } from "@/components/chat/group-settings";
 
 export default function GroupChatPage() {
   const { groupId } = useParams<{ groupId: string }>();
+  const [showSettings, setShowSettings] = useState(false);
   const { group, messages, typingUsers, sendMessage, handleTyping } =
     useGroupChat(groupId);
 
@@ -21,6 +24,12 @@ export default function GroupChatPage() {
             {group?.members?.length || 0} members
           </p>
         </div>
+        <button
+          onClick={() => setShowSettings(true)}
+          className="rounded p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          <Settings className="h-4 w-4" />
+        </button>
       </div>
 
       {/* Chat */}
@@ -37,6 +46,13 @@ export default function GroupChatPage() {
           }
         />
       </div>
+
+      {/* Settings panel */}
+      <GroupSettings
+        groupId={groupId}
+        open={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
     </div>
   );
 }

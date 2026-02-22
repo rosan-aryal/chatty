@@ -1,5 +1,5 @@
 import { eq, and } from "drizzle-orm";
-import { group, groupMember } from "@chat-application/db/schema/chat";
+import { group, groupMember, groupBan } from "@chat-application/db/schema/chat";
 import type { db as DB } from "@chat-application/db";
 
 type Database = typeof DB;
@@ -63,5 +63,27 @@ export class GroupRepository {
   async regenerateInviteCode(id: string) {
     const newCode = Math.random().toString(36).substring(2, 10).toUpperCase();
     return this.db.update(group).set({ inviteCode: newCode }).where(eq(group.id, id)).returning();
+  }
+
+  async banMember(groupId: string, userId: string, bannedBy: string) {
+    return this.db.insert(groupBan).values({ groupId, userId, bannedBy }).returning();
+  }
+
+  async unbanMember(groupId: string, userId: string) {
+    return this.db.delete(groupBan).where(and(eq(groupBan.groupId, groupId), eq(groupBan.userId, userId))).returning();
+  }
+
+  async isBanned(groupId: string, userId: string) {
+    const ban = await this.db.query.groupBan.findFirst({
+      where: and(eq(groupBan.groupId, groupId), eq(groupBan.userId, userId)),
+    });
+    return !!ban;
+  }
+
+  async listBans(groupId: string) {
+    return this.db.query.groupBan.findMany({
+      where: eq(groupBan.groupId, groupId),
+      with: { user: true },
+    });
   }
 }

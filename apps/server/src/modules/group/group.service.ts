@@ -14,6 +14,8 @@ export class GroupService {
   async joinPublic(groupId: string, userId: string) {
     const grp = await this.groupRepo.findById(groupId);
     if (!grp) throw new Error("Group not found");
+    const banned = await this.groupRepo.isBanned(groupId, userId);
+    if (banned) throw new Error("You are banned from this group");
     if (grp.type !== "public") throw new Error("Group is not public");
     const existing = await this.groupRepo.getMember(groupId, userId);
     if (existing) throw new Error("Already a member");
@@ -25,6 +27,8 @@ export class GroupService {
   async joinByCode(code: string, userId: string) {
     const grp = await this.groupRepo.findByInviteCode(code);
     if (!grp) throw new Error("Invalid invite code");
+    const banned = await this.groupRepo.isBanned(grp.id, userId);
+    if (banned) throw new Error("You are banned from this group");
     const existing = await this.groupRepo.getMember(grp.id, userId);
     if (existing) throw new Error("Already a member");
     const count = await this.groupRepo.getMemberCount(grp.id);
@@ -59,5 +63,28 @@ export class GroupService {
     if (!grp || grp.hostId !== userId) throw new Error("Not authorized");
     if (grp.type !== "private") throw new Error("Only private groups have invite codes");
     return this.groupRepo.regenerateInviteCode(groupId);
+  }
+
+  async ban(groupId: string, targetUserId: string, requesterId: string) {
+    const requester = await this.groupRepo.getMember(groupId, requesterId);
+    if (!requester || (requester.role !== "host" && requester.role !== "admin")) throw new Error("Not authorized");
+    const target = await this.groupRepo.getMember(groupId, targetUserId);
+    if (!target) throw new Error("User is not a member");
+    if (target.role === "host") throw new Error("Cannot ban the host");
+    await this.groupRepo.banMember(groupId, targetUserId, requesterId);
+    await this.groupRepo.removeMember(groupId, targetUserId);
+    return { success: true };
+  }
+
+  async unban(groupId: string, targetUserId: string, requesterId: string) {
+    const requester = await this.groupRepo.getMember(groupId, requesterId);
+    if (!requester || (requester.role !== "host" && requester.role !== "admin")) throw new Error("Not authorized");
+    return this.groupRepo.unbanMember(groupId, targetUserId);
+  }
+
+  async listBans(groupId: string, requesterId: string) {
+    const requester = await this.groupRepo.getMember(groupId, requesterId);
+    if (!requester || (requester.role !== "host" && requester.role !== "admin")) throw new Error("Not authorized");
+    return this.groupRepo.listBans(groupId);
   }
 }

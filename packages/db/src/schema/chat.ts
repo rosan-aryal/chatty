@@ -119,6 +119,7 @@ export const groupRelations = relations(group, ({ one, many }) => ({
   }),
   members: many(groupMember),
   messages: many(message),
+  bans: many(groupBan),
 }));
 
 // ── Group Member ───────────────────────────────────────────────────────
@@ -146,6 +147,42 @@ export const groupMemberRelations = relations(groupMember, ({ one }) => ({
   user: one(user, {
     fields: [groupMember.userId],
     references: [user.id],
+  }),
+}));
+
+// ── Group Ban ─────────────────────────────────────────────────────────
+
+export const groupBan = pgTable(
+  "group_ban",
+  {
+    groupId: uuid("group_id")
+      .notNull()
+      .references(() => group.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    bannedBy: text("banned_by")
+      .notNull()
+      .references(() => user.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.groupId, table.userId] })],
+);
+
+export const groupBanRelations = relations(groupBan, ({ one }) => ({
+  group: one(group, {
+    fields: [groupBan.groupId],
+    references: [group.id],
+  }),
+  user: one(user, {
+    fields: [groupBan.userId],
+    references: [user.id],
+    relationName: "bannedUser",
+  }),
+  banner: one(user, {
+    fields: [groupBan.bannedBy],
+    references: [user.id],
+    relationName: "bannerUser",
   }),
 }));
 
