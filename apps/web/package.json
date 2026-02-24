@@ -29,7 +29,9 @@
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.1",
     "tw-animate-css": "^1.3.4",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "gray-matter": "^4.0.3",
+    "next-mdx-remote": "^5.0.0"
   },
   "devDependencies": {
     "@chat-application/config": "workspace:*",
