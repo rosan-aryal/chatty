@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Plus, Hash, Lock, Users } from "lucide-react";
@@ -21,14 +21,8 @@ export default function GroupsPage() {
   const { data: myGroups = [] } = useMyGroups(tab === "mine");
   const joinPublic = useJoinGroup();
   const joinByCode = useJoinByCode();
-  const { createGroup, isPending, createdGroup } = useCreateGroup();
+  const createGroup = useCreateGroup();
   const router = useRouter();
-
-  useEffect(() => {
-    if (createdGroup) {
-      router.push(`/chat/groups/${createdGroup.id}` as any);
-    }
-  }, [createdGroup, router]);
 
   return (
     <div className="flex h-full flex-col p-6">
@@ -232,10 +226,17 @@ export default function GroupsPage() {
               </Button>
               <Button
                 size="sm"
-                onClick={() => createGroup({ name: newName, type: newType, maxMembers: newMaxMembers })}
-                disabled={isPending || !newName.trim()}
+                onClick={() => createGroup.mutate(
+                  { name: newName, type: newType, maxMembers: newMaxMembers },
+                  {
+                    onSuccess: (group) => {
+                      router.push(`/chat/groups/${group.id}` as any);
+                    },
+                  }
+                )}
+                disabled={createGroup.isPending || !newName.trim()}
               >
-                {isPending ? "Creating..." : "Create Group"}
+                {createGroup.isPending ? "Creating..." : "Create Group"}
               </Button>
             </div>
           </div>

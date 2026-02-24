@@ -7,11 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserPlus, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
@@ -27,7 +23,6 @@ export function NavMain() {
 
   return (
     <>
-      {/* Friends list */}
       <SidebarGroup>
         <SidebarGroupLabel className="flex items-center justify-between">
           <span className="inline-flex items-center gap-2">
@@ -39,7 +34,7 @@ export function NavMain() {
               </span>
             )}
           </span>
-          <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+          <Button size="sm" variant="ghost" className="h-6 w-6 p-0 group-data-[collapsible=icon]:hidden">
             <span className="sr-only">Add Friend</span>
             <UserPlus className="h-3.5 w-3.5" />
           </Button>
@@ -51,7 +46,7 @@ export function NavMain() {
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             </div>
           ) : sortedFriends.length === 0 ? (
-            <div className="px-2 py-3 text-center text-xs text-muted-foreground">
+            <div className="px-2 py-3 text-center text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
               No friends yet. Start a chat to connect!
             </div>
           ) : (
@@ -59,17 +54,12 @@ export function NavMain() {
               <SidebarMenuItem key={friend.friendshipId}>
                 <SidebarMenuButton
                   tooltip={friend.name}
-                  render={
-                    <a href={`/chat/friends/${friend.friendshipId}`} />
-                  }
+                  render={<a href={`/chat/friends/${friend.friendshipId}`} />}
                 >
                   <div className="relative">
                     <Avatar size="sm">
                       {friend.image && (
-                        <AvatarImage
-                          src={friend.image}
-                          alt={friend.name}
-                        />
+                        <AvatarImage src={friend.image} alt={friend.name} />
                       )}
                       <AvatarFallback>
                         {friend.name.charAt(0).toUpperCase()}

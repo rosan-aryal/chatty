@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { Group } from "@/types/groups";
 import { env } from "@chat-application/env/web";
@@ -6,42 +6,32 @@ import { env } from "@chat-application/env/web";
 const API = env.NEXT_PUBLIC_SERVER_URL;
 
 export function useCreateGroup() {
-  const [isPending, setIsPending] = useState(false);
-  const [createdGroup, setCreatedGroup] = useState<Group | null>(null);
-
-  const createGroup = async (data: {
-    name: string;
-    type: "public" | "private";
-    maxMembers: number;
-  }) => {
-    if (!data.name.trim()) {
-      toast.error("Group name is required");
-      return;
-    }
-
-    setIsPending(true);
-    try {
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      type: "public" | "private";
+      maxMembers: number;
+    }): Promise<Group> => {
+      if (!data.name.trim()) {
+        throw new Error("Group name is required");
+      }
       const res = await fetch(`${API}/api/groups`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
-      if (res.ok) {
-        const group = await res.json();
-        setCreatedGroup(group);
-        toast.success("Group created!");
-      } else {
+      if (!res.ok) {
         const d = await res.json();
-        toast.error(d.error || "Failed to create group");
+        throw new Error(d.error || "Failed to create group");
       }
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setIsPending(false);
-    }
-  };
-
-  return { createGroup, isPending, createdGroup };
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success("Group created!");
+    },
+    onError: (e: Error) => {
+      toast.error(e.message || "Something went wrong");
+    },
+  });
 }
