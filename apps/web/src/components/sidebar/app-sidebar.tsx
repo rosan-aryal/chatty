@@ -1,25 +1,22 @@
 "use client";
 
 import { NavMain } from "@/components/sidebar/nav-main";
-import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { NavUser } from "@/components/sidebar/nav-user";
+import { SupportDialog } from "@/components/sidebar/support-dialog";
+import { FeedbackDialog } from "@/components/sidebar/feedback-dialog";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { LifeBuoyIcon, SendIcon } from "lucide-react";
 import { NavPlatform } from "./nav-platform";
 import { useProfile } from "@/hooks/use-profile";
-
-const navSecondary = [
-  { title: "Support", url: "/support", icon: <LifeBuoyIcon /> },
-  { title: "Feedback", url: "/feedback", icon: <SendIcon /> },
-];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: profile } = useProfile();
@@ -34,7 +31,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<a href="#" />}>
+            <SidebarMenuButton size="lg" render={<a href="/chat" />}>
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-primary via-secondary to-primary/55 shadow-lg">
                   C
@@ -51,7 +48,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain />
         <NavPlatform isPremium={profile?.isPremium ?? false} />
-        <NavSecondary items={navSecondary} className="mt-auto" />
+        <SidebarGroup className="mt-auto">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SupportDialog />
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <FeedbackDialog />
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser
