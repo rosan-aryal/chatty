@@ -24,6 +24,33 @@ export const auth = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
+  user: {
+    additionalFields: {
+      onboarded: {
+        type: "boolean",
+        defaultValue: false,
+        input: false,
+      },
+      gender: {
+        type: "string",
+        required: false,
+      },
+      country: {
+        type: "string",
+        required: false,
+      },
+      isPremium: {
+        type: "boolean",
+        defaultValue: false,
+        input: false,
+      },
+      isAnonymous: {
+        type: "boolean",
+        defaultValue: true,
+        input: false,
+      },
+    },
+  },
   advanced: {
     defaultCookieAttributes: {
       sameSite: "none",

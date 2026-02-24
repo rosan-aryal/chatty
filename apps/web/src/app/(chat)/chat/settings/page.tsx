@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Crown, Shield, ExternalLink, Loader2, Save } from "lucide-react";
 import Link from "next/link";
 import { useProfile } from "@/hooks/use-profile";
-import { useUpdateProfile, useToggleVisibility, useBillingPortal } from "@/hooks/use-settings";
+import {
+  useUpdateProfile,
+  useToggleVisibility,
+  useBillingPortal,
+} from "@/hooks/use-settings";
 import { CountrySelector } from "@/components/country-selector";
 
 export default function SettingsPage() {
@@ -36,10 +40,9 @@ export default function SettingsPage() {
 
   return (
     <div className="flex h-full flex-col p-6">
-      <div className="mx-auto w-full max-w-lg space-y-8">
+      <div className="mx-auto w-full max-w-7xl space-y-8">
         <h1 className="text-2xl font-bold">Settings</h1>
 
-        {/* Profile Info (read-only) */}
         <section className="space-y-4">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
             Profile
